@@ -1,0 +1,226 @@
+<div class="slides">
+    {{!-- Banner --}}
+    <section id="banner">
+        <img src="/img/banner.png" alt="">
+    </section>
+
+    {{!-- Best Seller --}}
+    <section id="bestseller">
+        <div class="box-mid">
+            <div class="container">
+                <div class="two alt-two mt-5">
+                    <h1 style="color: #ef8040">Best Seller
+                        <span><img style="width: 50px;" src="/img/favicon.png" alt=""> Thực phẩm chức năng J&K <img style="width: 50px;" src="/img/favicon.png" alt=""></span>
+                        {{!-- <div class="icon"></div> --}}
+                    </h1>
+                </div>
+
+                <div class="row">
+                    {{!-- <div id="list-seafood" class="list-seafood mt-2"> --}}
+                        {{#each hotProducts}}
+                            <div  class="col-md-3 col-sm-4 col-xs-6 seafood-box-2 mt-4">
+                            <div onclick="window.location.href='/products/{{slug}}'" class="seafood-img-box">
+                                <img src="{{image}}" alt="">
+                            </div>
+
+                            <div class="seafood-content-box">
+                                <a href="/products/{{slug}}" class="seafood-title title-menu">{{pname}}</a>
+                                <div class="seafood-price">
+                                    {{#toPrice price}}
+                                    {{/toPrice}}
+                                </div>
+                                
+                                <div class="seafood-contact">
+                                    {{stock}}
+                                </div>
+
+                                <div onclick="addDrinkToCart('{{pid}}','{{pname}}','{{price}}','1','{{image}}','{{slug}}')" class="seafood-buy smooth">
+                                    <a type="button" >Mua hàng</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    {{!-- </div> --}}
+                        <div class="watch-more mt-3">
+                           <a href="/collections/whey-protein">Xem thêm >></a>
+                        </div>
+                   
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{!-- Seafood --}}
+    <section id="newproduct">
+        <div class="box-mid">
+            <div class="container">
+                <div class="two alt-two mt-5">
+                    <h1 style="color: #d4170a">Sản phẩm mới
+                        <span><img style="width: 50px;" src="/img/favicon.png" alt=""> Thực phẩm chức năng J&K <img style="width: 50px;" src="/img/favicon.png" alt=""></span>
+                        {{!-- <div class="icon"></div> --}}
+                    </h1>
+                </div>
+
+                <div class="row">
+                    {{!-- <div id="list-seafood" class="list-seafood mt-2"> --}}
+                        {{#each newProducts}}
+                            <div  class="col-md-3 col-sm-4 col-xs-6 seafood-box-2 mt-4">
+                            <div onclick="window.location.href='/products/{{slug}}'" class="seafood-img-box">
+                                <img src="{{image}}" alt="">
+                            </div>
+
+                            <div class="seafood-content-box">
+                                <a href="/products/{{slug}}" class="seafood-title title-menu">{{pname}}</a>
+                                <div class="seafood-price">
+                                    {{#toPrice price}}
+                                    {{/toPrice}}
+                                </div>
+                                
+                                <div class="seafood-contact">
+                                    {{stock}}
+                                </div>
+
+                                <div onclick="addDrinkToCart('{{pid}}','{{pname}}','{{price}}','1','{{image}}','{{slug}}')" class="seafood-buy smooth">
+                                    <a type="button" >Mua hàng</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    {{!-- </div> --}}
+
+                   
+                        <div class="watch-more mt-3">
+                           <a href="/collections/whey-protein">Xem thêm >></a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{!-- Menu --}}
+    <section id="vegan">
+        <div class="box-mid">
+            <div class="container">
+                <div class="two alt-two mt-5">
+                    <h1 style="color: #59CE8F">Sản phẩm chay
+                        <span><img style="width: 50px;" src="/img/favicon.png" alt=""> Thực phẩm chức năng J&K <img style="width: 50px;" src="/img/favicon.png" alt=""></span>
+                        {{!-- <div class="icon"></div> --}}
+                    </h1>
+                </div>
+
+                <div class="row">
+                    {{!-- <div id="list-seafood" class="list-seafood mt-2"> --}}
+                        {{#each veganProducts}}
+                            <div  class="col-md-3 col-sm-4 col-xs-6 seafood-box-2 mt-4">
+                            <div onclick="window.location.href='/products/{{slug}}'" class="seafood-img-box">
+                                <img src="{{image}}" alt="">
+                            </div>
+
+                            <div class="seafood-content-box">
+                                <a href="/products/{{slug}}" class="seafood-title title-menu">{{pname}}</a>
+                                <div class="seafood-price">
+                                    {{#toPrice price}}
+                                    {{/toPrice}}
+                                </div>
+                                
+                                <div class="seafood-contact">
+                                    {{stock}}
+                                </div>
+
+                                <div onclick="addDrinkToCart('{{pid}}','{{pname}}','{{price}}','1','{{image}}','{{slug}}')" class="seafood-buy smooth">
+                                    <a type="button" >Mua hàng</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    {{!-- </div> --}}
+                        <div class="watch-more mt-3">
+                           <a href="/collections/vegan-protein">Xem thêm >></a>
+                        </div>
+                   
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="footer">
+        {{> footer}}
+    </section>
+
+
+
+</div>
+
+<script>
+
+    var mySlider = slider('.slides');
+     let shoppingCart
+    if (localStorage.getItem('shopping-cart')) {
+        shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'))
+    } else {
+        shoppingCart = JSON.parse(localStorage.setItem('shopping-cart', '[]'))
+    }
+
+    function addDrinkToCart(id, name, price, quantity, img, slug) {
+        
+        let checkID = shoppingCart.some(item => {
+            item = JSON.parse(item);
+            return item.id === id;
+        })
+        if (checkID) {
+            changeNumberOfDrink('plus', id);
+            
+            {{!-- alertAddToAdminCart(name); --}}
+        } else {
+            const drink = {
+                id: id,
+                name: name,
+                price: price,
+                stringPrice: Number(price).toLocaleString('vi', { style: "currency", currency: "VND" }),
+                img: img,
+                inventory: 1000,
+                slug: slug
+            }
+            shoppingCart.push(JSON.stringify({
+                ...drink,
+                numberOfUnit: Number(quantity)
+            }));
+            
+        }
+        alertAddToCart(name);
+        updateShoppingCart()
+    }
+
+    function changeNumberOfDrink(action, id) {
+        shoppingCart = shoppingCart.map(item => {
+            item = JSON.parse(item)
+            let numberOfUnit = Number(item.numberOfUnit)
+            if (item.id === id) {
+                if (action == 'minus' && numberOfUnit > 1) {
+                    numberOfUnit--
+                } else if (action == 'plus') {
+                    numberOfUnit++
+                }
+            }
+            return JSON.stringify({
+                ...item,
+                numberOfUnit: numberOfUnit
+            })
+        })
+        updateShoppingCart()
+    }
+
+    function updateShoppingCart() {
+        localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart))
+    }
+
+    function alertAddToCart(name) {
+        document.getElementById('alertAddToCart').innerHTML =
+            `<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                    Đã thêm <strong>${name}</strong> vào giỏ hàng
+                </div>`
+        setTimeout(function () { document.getElementById('alertAddToCart').innerHTML = ''; }, 2000);
+    }
+</script>

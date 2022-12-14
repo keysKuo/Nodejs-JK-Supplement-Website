@@ -1,0 +1,631 @@
+<h2 class="h-title">
+    <span>Danh sách sản phẩm</span>
+</h2>
+
+<div class="row">
+    <div class=" mx-auto">
+        <div class="bg-white rounded-lg shadow-sm p-5">
+            <!-- Credit card form tabs -->
+            
+            <!-- End -->
+
+
+            <!-- Credit card form content -->
+            <div class="tab-content">
+                
+                <!-- credit card info-->
+                <div id="nav-tab-card" class="tab-pane fade show active">
+                    {{#if success}}
+                    <p class="alert alert-success">{{success}}</p>
+                    {{/if}}
+                    {{#if error}}
+                    <p class="alert alert-danger">{{error}}</p>
+                    {{/if}}
+                    <table id="seafoodTable" class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="th-sm">STT</th>
+                                <th class="th-sm">Tên sản phẩm</th>
+                                <th class="th-sm">Kích thước</th>
+                                <th class="th-sm">Giá</th>
+                                <th class="th-sm">Số lượng</th>
+                                <th class="th-sm"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="listSeafood">
+                            {{#each data}}
+                                <tr>
+                                <td>
+                                    <p class="fw-bold mb-1">{{@index}}</p>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{image}}" class="rounded-circle"
+                                            alt="" style="width: 45px; height: 45px" />
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1">{{pname}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{weight}}
+                                </td>
+                                <td>
+                                    {{price}}
+                                </td>
+                                <td>
+                                    {{stock}}
+                                </td>
+                                <td>
+                                    <div onclick="addDrinkToCart('{{pid}}','{{pname}}','{{strPrice}}','1','{{image}}','{{slug}}')" class="btn btn-success">Thêm vào giỏ</div>
+                                </td>
+                            </tr>`
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End -->
+                <div id="nav-tab-paypal" class="tab-pane fade">
+                    {{#if success}}
+                    <p class="alert alert-success">{{success}}</p>
+                    {{/if}}
+                    {{#if error}}
+                    <p class="alert alert-danger">{{error}}</p>
+                    {{/if}}
+                    <table id="menuTable" class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="listMenu">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End -->
+            </div>
+        </div>
+
+
+        {{!-- Modal: start --}}
+        
+        {{!-- Modal: end --}}
+    </div>
+
+
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script>
+
+        const listMenu = document.getElementById('listMenu');
+        const listSeafood = document.getElementById('listSeafood');
+        const listSeaFoodModal = document.getElementById('listSeaFoodModal');
+        const listMenuModal = document.getElementById('listMenuModal');
+        const deleteModal = document.getElementById('deleteModal')
+        const searchParams = new URLSearchParams(window.location.search)
+        renderMenu()
+        renderSeaFood()
+        $(document).ready(function () {
+            
+
+            $('#seafoodTable').DataTable();
+            $('#menuTable').DataTable();
+        });
+            let shoppingCart
+        if (localStorage.getItem('shopping-cart')) {
+            shoppingCart = JSON.parse(localStorage.getItem('shopping-cart'))
+        } else {
+            shoppingCart = JSON.parse(localStorage.setItem('shopping-cart', '[]'))
+        }
+
+        function addDrinkToCart(id, name, price, quantity, img, slug) {
+        
+        let checkID = shoppingCart.some(item => {
+            item = JSON.parse(item);
+            return item.id === id;
+        })
+        if (checkID) {
+            changeNumberOfDrink('plus', id);
+            
+            {{!-- alertAddToAdminCart(name); --}}
+        } else {
+            const drink = {
+                id: id,
+                name: name,
+                price: price,
+                stringPrice: Number(price).toLocaleString('vi', { style: "currency", currency: "VND" }),
+                img: img,
+                inventory: 1000,
+                slug: slug
+            }
+            shoppingCart.push(JSON.stringify({
+                ...drink,
+                numberOfUnit: Number(quantity)
+            }));
+            
+        }
+        alertAddToCart(name);
+        updateShoppingCart()
+    }
+
+        function changeNumberOfDrink(action, id) {
+            shoppingCart = shoppingCart.map(item => {
+                item = JSON.parse(item)
+                let numberOfUnit = Number(item.numberOfUnit)
+                if (item.id === id) {
+                    if (action == 'minus' && numberOfUnit > 1) {
+                        numberOfUnit--
+                    } else if (action == 'plus') {
+                        numberOfUnit++
+                    }
+                }
+                return JSON.stringify({
+                    ...item,
+                    numberOfUnit: numberOfUnit
+                })
+            })
+            updateShoppingCart()
+        }
+
+        function updateShoppingCart() {
+            localStorage.setItem('shopping-cart', JSON.stringify(shoppingCart))
+        }
+
+        function alertAddToCart(name) {
+            document.getElementById('alertAddToCart').innerHTML =
+                `<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                        Đã thêm <strong>${name}</strong> vào giỏ hàng
+                    </div>`
+            setTimeout(function () { document.getElementById('alertAddToCart').innerHTML = ''; }, 2000);
+        }
+
+
+        // Get and render seafood from db
+        function renderSeaFood() {
+            // use ajax call api to get data
+            $.ajax({
+                url: `/seafood/all`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    if (!data.seaFoodList) {
+                        listSeafood.innerHTML = `<td colspan="5">
+                                    <p class="fw-bold mb-1">Không có hải sản nào</p>
+                                </td>`
+                    } else {
+                        listSeafood.innerHTML = ``
+                        const list = data.seaFoodList
+                        let index = 1;
+                        // seafood list rendering
+                        list.forEach(item => {
+                            let listImage = item.image
+                            let price = item.price
+                            let row = ``
+                            let cost = ``
+                            let quantity = ``
+                            let type = ``
+                            let img = ``
+                            let old_image = ``
+                            listImage.forEach(item => {
+                                img += `<figure>
+                                <img src="${item}">
+                                <input type="text" value="${item}""
+                                                            class="d-none" required="">
+                            </figure>`
+                            })
+                            listImage.forEach(item => {
+                                old_image += `<input type="text" value="${item}" name="old_image[]"
+                                                            class="d-none" required="">`
+                            })
+                            // Render list price object
+                            price.forEach((p, index) => {
+                                if (index !== 0) {
+                                    row += `<div id="inputFormRow${item.id}" class="row">
+                                            <div class="col-sm-3">
+                                            <div class="form-group mb-4">
+                                                <input type="number" value="${Number(p.quantity)}" placeholder="Nhập số lượng" name="quantity[]"
+                                                    class="form-control" required="">
+                                                    </div>
+                                            </div>
+                                            <div  class="col-sm-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="number" value="${Number(p.originPrice)}" placeholder="Nhập giá" name="price[]"
+                                                            class="form-control" required="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div  class="col-sm-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="number" value="${Number(p.discountPercent)}" placeholder="Nhập khuyến mãi (%)" name="discount[]"
+                                                            class="form-control" required="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="text" value="${p.size}" placeholder="Nhập kích thước" name="size[]"
+                                                            class="form-control" required="">
+                                                        <button id="removeRow${item.id}" type="button"
+                                                            class="btn btn-danger">Xóa</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`
+                                }
+                                cost += `<div class="row mb-1"> 
+                                        <span class="badge badge-warning rounded-pill d-inline col-8">${p.originPrice.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
+                                    </div>`;
+                                quantity += `<div class="row mb-1"> 
+                                        <span class="badge badge-primary rounded-pill d-inline col-8">${p.quantity}</span>
+                                    </div>`;
+                                type += `<div class="row mb-1"> 
+                                        <span class="badge badge-success rounded-pill d-inline col-8">${p.size}</span>
+                                    </div>`
+                            })
+
+                            listSeafood.innerHTML += `<tr>
+                                <td>
+                                    <p class="fw-bold mb-1">${index++}</p>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="${item.avatar}" class="rounded-circle"
+                                            alt="" style="width: 45px; height: 45px" />
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1">${item.name}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    ${type}
+                                </td>
+                                <td>
+                                    ${cost}
+                                </td>
+                                <td>
+                                    ${quantity}
+                                </td>
+                                <td>
+                                    <button type="button" data-toggle="modal" data-target="#seafoodModal${item.id}"  class="btn btn-link btn-rounded btn-sm fw-bold"
+                                        data-mdb-ripple-color="dark">
+                                        Sửa
+                                    </button>
+                                </td>
+                            </tr>`
+                            listSeaFoodModal.innerHTML += `<div id="seafoodModal${item.id}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div style="padding: 20px" class="modal-content">
+                                <form method="post" action="/seafood/edit/${item.id}" role="form" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="name">Tên sản phẩm <i class="fas fa-signature"></i></label>
+                                                <input type="text" name="name" value="${item.name}" placeholder="Nhập tên sản phẩm" required=""
+                                                    class="form-control">
+                                                <input type="text" name="old_name" value="${item.name}" required=""
+                                                    class="d-none">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="productID">Mã sản phẩm <i class="fas fa-barcode"></i></label>
+                                                    <input type="text" name="productID" value="${item.pid}" placeholder="Nhập mã sản phẩm" required=""
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="origin">Xuất xứ <i class="fas fa-anchor"></i></label>
+                                        <input value="${item.origin}" type="text" name="origin" placeholder="Nhập xuất xứ" required=""
+                                            class="form-control">
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <div class="form-group mb-4">
+                                                        <label data-toggle="tooltip"
+                                                            >Số
+                                                            lượng
+                                                            <i class="fa fa-question-circle"></i>
+                                                        </label>
+                                                        <input type="number" placeholder="Nhập số lượng" value="${Number(item.price[0].quantity)}" name="quantity[]"
+                                                            class="form-control" required="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label><span class="hidden-xs">Giá <i
+                                                                    class="fas fa-money-bill"></i></span></label>
+                                                        <div class="input-group">
+                                                            <input type="number" value="${Number(item.price[0].originPrice)}" placeholder="Nhập giá" name="price[]"
+                                                                class="form-control" required="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label><span class="hidden-xs">Khuyến mãi <i class="fas fa-percentage"></i></span></label>
+                                                        <div class="input-group">
+                                                            <input type="number" value="${Number(item.price[0].discountPercent)}" placeholder="Nhập khuyến mãi (%)" name="discount[]"
+                                                                class="form-control" required="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <label><span class="hidden-xs">Kích thước <i
+                                                                    class="fas fa-ruler"></i></span></label>
+                                                        <div class="input-group">
+                                                            <input type="text" value="${item.price[0].size}"  placeholder="Nhập kích thước" name="size[]"
+                                                                class="form-control" required="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="newRow${item.id}">
+                                                ${row}
+                                            </div>
+                                            <button id="addRow${item.id}" type="button" class="btn btn-outline-success btn-sm mb-2"><i
+                                                    class="fas fa-plus"></i> Thêm</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        ${old_image}
+                                        <label for="cardNumber">Hình ảnh sản phẩm <i class="far fa-images"></i></label>
+                                        <div class="input-group">
+                                            <div class="form-group-container">
+                                                <input id="product-image${item.id}" accept="image/*"  name="product-image"
+                                                    class="form-control input-md" onchange="previewMenu('${item.id}')" type="file" multiple>
+                                                <label for="product-image${item.id}">
+                                                    <i class="fas fa-upload"></i>
+                                                    Chọn ảnh sản phẩm &nbsp;
+                                                </label>
+                                                <p id="num-of-file${item.id}">Chưa có ảnh nào được chọn</p>
+                                                <div id="images-upload${item.id}">
+                                                    ${img}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="seafood_description${item.id}">Mô tả chi tiết sản phẩm <i
+                                                class="fas fa-align-center"></i></label>
+                                        <textarea required="" id="seafood_description${item.id}" name="description">${item.description}</textarea>
+                                    </div>
+                                    <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm">
+                                        Sửa hải sản </button>
+                                    <button type="button"  data-toggle="modal" data-target="#deleteModal${item.id}" class="subscribe btn btn-danger btn-block rounded-pill shadow-sm">
+                                    Xóa hải sản </button>
+                                </form>
+                            </div>
+                        </div>
+                        </div>`;
+                            deleteModal.innerHTML += `<div class="modal fade" id="deleteModal${item.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Xóa thực đơn</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Bạn có muốn xóa <strong>${item.name}</strong>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                <button onclick="deleteSeafood('${item.id}')" type="button" class="btn btn-danger">Xóa</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>`
+                        })
+                        // replace textarea
+                        list.forEach(item => {
+                            CKEDITOR.replace(`seafood_description${item.id}`)
+                            $(document).on('click', `#removeRow${item.id}`, function () {
+                                $(this).closest(`#inputFormRow${item.id}`).remove();
+                            });
+
+                            $(`#addRow${item.id}`).click(function () {
+                                let html = ``;
+                                html += `<div id="inputFormRow${item.id}" class="row">
+                                        <div class="col-sm-3">
+                                        <div class="form-group mb-4">
+                                            <input type="number" placeholder="Nhập số lượng" name="quantity[]"
+                                                class="form-control" required="">
+                                                </div>
+                                        </div>
+                                        <div  class="col-sm-3">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="number" placeholder="Nhập giá" name="price[]"
+                                                        class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input type="number" placeholder="Nhập khuyến mãi (%)" name="discount[]"
+                                                                class="form-control" required="">
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Nhập kích thước" name="size[]"
+                                                        class="form-control" required="">
+                                                    <button id="removeRow${item.id}" type="button"
+                                                        class="btn btn-danger">Xóa</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+                                $(`#newRow${item.id}`).append(html)
+                            })
+                        })
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+        // Get and render menu from db
+        function renderMenu() {
+            let name = searchParams.get('menuName')
+            $.ajax({
+                url: `/menu/all?name=${name}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    if (!data.menuList) {
+                        listMenu.innerHTML = `<td colspan="5">
+                                    <p class="fw-bold mb-1">Không có thực đơn nào</p>
+                                </td>`
+                    } else {
+                        listMenu.innerHTML = ``
+                        listMenuModal.innerHTML = ``
+                        const list = data.menuList
+                        let index = 1;
+                        list.forEach(item => {
+                            let img = ``
+                            listMenu.innerHTML += `<tr>
+                                <td>
+                                    <p class="fw-bold mb-1">${index++}</p>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="${item.image}" class="rounded-circle"
+                                            alt="" style="width: 45px; height: 45px" />
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1">${item.name}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button data-toggle="modal" data-target="#menuModal${item.id}" type="button" class="btn btn-link btn-rounded btn-sm fw-bold"
+                                        data-mdb-ripple-color="dark">
+                                        Sửa
+                                    </button>
+                                </td>
+                            </tr>`;
+                            listMenuModal.innerHTML += `<div id="menuModal${item.id}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div style="padding: 20px" class="modal-content">
+                            <form method="post" action="/menu/edit/${item.id}" role="form" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="menu_name">Tên thực đơn <i class="fas fa-signature"></i></label>
+                                    <input type="text" name="menu_name" value="${item.name}" placeholder="Nhập tên thực đơn" required=""
+                                        class="form-control">
+                                    <input class="d-none" type="text" name="old_menu_name" value="${item.name}"  required="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cardNumber">Hình ảnh thực đơn <i class="far fa-images"></i></label>
+                                    <div class="input-group">
+                                        <div class="form-group-container">
+                                            <input class="d-none" type="text" value="${item.image}" name="oldImage">
+                                            <input id="product-image${item.id}" accept="image/*" name="menu-image"
+                                                class="form-control input-md" onchange="previewMenu('${item.id}')" type="file">
+                                            <label for="product-image${item.id}">
+                                                <i class="fas fa-upload"></i>
+                                                Chọn ảnh thực đơn &nbsp;
+                                            </label>
+                                            <p id="num-of-file${item.id}">Chưa có ảnh nào được chọn</p>
+                                            <div class="images-upload" id="images-upload${item.id}">
+                                                <figure>
+                                                    <img src="${item.image}">
+                                                </figure>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="menu_description">Mô tả chi tiết thực đơn <i
+                                            class="fas fa-align-center"></i></label>
+                                    <textarea required="" id="menu_description${item.id}" name="menu_description">${item.description}</textarea>
+                                </div>
+                                <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm">
+                                    Chỉnh sửa thực đơn </button>
+                                <button type="button"  data-toggle="modal" data-target="#deleteModal${item.id}" class="subscribe btn btn-danger btn-block rounded-pill shadow-sm">
+                                    Xóa thực đơn </button>
+                            </form>
+                            </div>
+                        </div>
+                        </div>`;
+                            deleteModal.innerHTML += `<div class="modal fade" id="deleteModal${item.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Xóa thực đơn</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Bạn có muốn xóa thực đơn <strong>${item.name}</strong>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                <button onclick="deleteMenu('${item.id}')" type="button" class="btn btn-danger">Xóa</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>`
+                        })
+                        list.forEach(item => {
+                            CKEDITOR.replace(`menu_description${item.id}`)
+                        })
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+        function previewMenu(id) {
+            let fileInput = document.getElementById(`product-image${id}`);
+            let imageContainer = document.getElementById(`images-upload${id}`);
+            let numOfFiles = document.getElementById(`num-of-file${id}`);
+
+            imageContainer.innerHTML = ""
+            numOfFiles.textContent = `${fileInput.files.length} ảnh đã được chọn`;
+
+            for (i of fileInput.files) {
+                let reader = new FileReader()
+                let figure = document.createElement("figure")
+                let figCap = document.createElement("figcaption")
+
+                figCap.innerText = i.name
+                figure.appendChild(figCap)
+                reader.onload = () => {
+                    let img = document.createElement("img");
+                    img.setAttribute("src", reader.result);
+                    figure.insertBefore(img, figCap);
+                }
+                imageContainer.appendChild(figure);
+                reader.readAsDataURL(i)
+            }
+        }
+        function deleteMenu(id) {
+            location.href = `/menu/delete/${id}`
+        }
+        function deleteSeafood(id) {
+            location.href = `/seafood/delete/${id}`
+        }
+
+    </script>

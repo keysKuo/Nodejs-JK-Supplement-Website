@@ -1,0 +1,138 @@
+<div class="container">
+  <div class="two alt-two">
+    <h1>{{pageName}}
+    <span><img style="width: 50px;" src="/img/favicon.png" alt=""> Thực phẩm chức năng J&K <img style="width: 50px;" src="/img/favicon.png" alt=""></span>
+                        </h1>
+  </div>
+
+  <div class="row product-detail-main mt-5">
+
+    <div class="col-md-10 col-sm-8">
+      <div class="row">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="product-gallery">
+            <div class="product-image-detail scroll">
+              <div class="col-sm-12 col-md-12">
+                <div data-toggle="modal" data-target=".bd-example-modal-lg" class="slider-for">
+                  
+                  <div class="product1">
+                    <img data-id="{{@index}}" src="{{data.image}}" height="450vh" width="100%">
+                  </div>
+                  
+
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 col-xs-12">
+          <div class="product-info-box">
+            <h4>{{data.pname}}</h4>
+            <hr>
+            <p><span class="bolder">Mã sản phẩm: </span> {{data.pid}}</p>
+            <div class="prod-des mb-5">
+              <p><span class="bolder">Thương hiệu: </span> {{data.brand}}</p>
+              <p><span class="bolder">Định lượng: </span> {{data.weight}} </p>
+              <p><span class="bolder">Số lượng: </span> {{data.stock}} </p>
+              
+            </div>
+
+            <input class="d-none" name="id" value="{{data.pid}}" type="text">
+            <input class="d-none" name="name" value="{{data.pname}}" type="text">
+            <input class="d-none" name="image" value="{{data.image}}" type="text">
+            <input class="d-none" name="slug" value="{{data.slug}}" type="text">
+            <input class="d-none" name="price" value="{{data.price}}" type="text">
+
+            
+            <div id="product-price" class="prod-price mb-3">
+              {{toPrice data.price}}
+            </div>
+            <div class="crtdiv">
+              <span class="qty">
+                <span class="dec">
+                  <i class="fa fa-minus-square" aria-hidden="true"></i>
+                </span>
+                <span id="numOfSeafood" class="num">
+                  1
+                </span>
+                <span class="inc">
+                  <i class="fa fa-plus-square" aria-hidden="true"></i>
+                </span>
+              </span>
+              <button id="btn" type="button" class="cart-2"> Thêm vào giỏ</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-5">
+          <ul class="nav nav-tabs mb-3" id="ex-with-icons" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="ex-with-icons-tab-1" data-mdb-toggle="tab" href="#ex-with-icons-tabs-1"
+                role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true"><i class="fas fa-fish"></i> Mô
+                tả</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="ex-with-icons-tab-2" data-mdb-toggle="tab" href="#ex-with-icons-tabs-2" role="tab"
+                aria-controls="ex-with-icons-tabs-2" aria-selected="false"><i
+                  class="fas fa-chart-line fa-fw me-2"></i>Đánh giá</a>
+            </li>
+          </ul>
+          <!-- Tabs navs -->
+
+          <!-- Tabs content -->
+          <div class="tab-content" id="ex-with-icons-content">
+            <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel"
+              aria-labelledby="ex-with-icons-tab-1">
+              {{{data.description}}}
+            </div>
+            <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
+              <div class="fb-comments" data-href="https://haisanco5saigon.com/seafood/{{data.slug}}" data-width=""
+                data-numposts="5"></div>
+            </div>
+          </div>
+          <!-- Tabs content -->
+        </div>
+      </div>
+    </div>
+
+    <div class="no-padding col-md-2 col-sm-4 right-test">
+      <div class="m-heading">
+        Sản phẩm liên quan
+      </div>
+
+      {{#each relatives}}
+        <div class="r-prod-box mb-3">
+          <div class="r-prod-img-box">
+            <img src="{{image}}" alt="" class="w-100">
+          </div>
+          <div class="r-prod-info-box">
+            <div class="px-2 py-1">{{pname}}</div>
+            <div style="color: #D82148" class="text-center px-2">{{#toPrice price}}{{/toPrice}}</div>
+
+            <div class="bottom-place w-100">
+              <a href="/products/{{slug}}" style="display: block;" class="cart-2 py-1 text-center">Xem thêm</a>
+            </div>
+          </div>
+        </div>
+        
+        
+      {{/each}}
+      {{!-- <div class="r-prod-box mb-3">
+        <div class="r-prod-img-box">
+          <img src="/img/test/main.png" alt="" class="w-100">
+        </div>
+        <div class="r-prod-info-box">
+          <div class="px-2 py-1">Cua Xanh Phan Thiết</div>
+          <div style="color: #D82148" class="px-2">395.000đ</div>
+
+          <div class="bottom-place w-100">
+            <div class="cart-2 py-2 text-center">Thêm vào giỏ</div>
+          </div>
+        </div>
+      </div> --}}
+
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,251 @@
+<h2 class="h-title">
+    <span>Thêm sản phẩm</span>
+</h2>
+
+<div class="row">
+
+    <div class=" mx-auto">
+
+        <div class="bg-white rounded-lg shadow-sm p-5">
+            <!-- Credit card form tabs -->
+            <ul role="tablist" class="nav bg-light nav-pills rounded-pill nav-fill mb-3">
+                <li class="nav-item">
+                    <a data-toggle="pill" href="#nav-tab-card" class="nav-link active rounded-pill">
+                        <i class="fas fa-fish"></i>
+                        Thêm hải sản
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-toggle="pill" href="#nav-tab-paypal" class="nav-link rounded-pill">
+                        <i class="fas fa-book"></i>
+                        Thêm thực đơn
+                    </a>
+                </li>
+            </ul>
+            <!-- End -->
+
+
+            <!-- Credit card form content -->
+            <div class="tab-content">
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <a type="button" href="/admin/list-product"
+                            class="subscribe btn btn-secondary btn-block rounded-pill shadow-sm">
+                            <i class="fas fa-list"></i> Danh sách sản phẩm </a>
+                    </div>
+                </div>
+                <!-- credit card info-->
+                <div id="nav-tab-card" class="tab-pane fade show active">
+                    {{#if success}}
+                    <p class="alert alert-success">{{success}}</p>
+                    {{/if}}
+                    {{#if error}}
+                    <p class="alert alert-danger">{{error}}</p>
+                    {{/if}}
+                    <form method="post" action="/seafood/add" role="form" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Tên sản phẩm <i class="fas fa-signature"></i></label>
+                                    <input type="text" name="name" placeholder="Nhập tên sản phẩm" required=""
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="productID">Mã sản phẩm <i class="fas fa-barcode"></i></label>
+                                    <input type="text" name="productID" placeholder="Nhập mã sản phẩm" required=""
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="origin">Xuất xứ <i class="fas fa-anchor"></i></label>
+                            <input type="text" name="origin" placeholder="Nhập xuất xứ" required=""
+                                class="form-control">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group mb-4">
+                                            <label data-toggle="tooltip"
+                                                title="Three-digits code on the back of your card">Số
+                                                lượng
+                                                <i class="fa fa-question-circle"></i>
+                                            </label>
+                                            <input type="number" placeholder="Nhập số lượng" name="quantity[]"
+                                                class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label><span class="hidden-xs">Giá <i
+                                                        class="fas fa-money-bill"></i></span></label>
+                                            <div class="input-group">
+                                                <input type="number" placeholder="Nhập giá" value="0" required=""
+                                                    name="price[]" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="discount">Khuyến mãi <i class="fas fa-percentage"></i></label>
+                                            <input type="number" name="discount[]" value="0" required=""
+                                                placeholder="Nhập khuyến mãi (%)" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label><span class="hidden-xs">Kích thước <i
+                                                        class="fas fa-ruler"></i></span></label>
+                                            <div class="input-group">
+                                                <input type="text" placeholder="Nhập kích thước" name="size[]"
+                                                    class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="newRow">
+                                </div>
+                                <button id="addRow" type="button" class="btn btn-outline-success btn-sm mb-2"><i
+                                        class="fas fa-plus"></i> Thêm</button>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardNumber">Hình ảnh sản phẩm <i class="far fa-images"></i></label>
+                            <div class="input-group">
+                                <div class="form-group-container">
+                                    <input id="product-image" accept="image/*" required="" name="product-image"
+                                        class="form-control input-md" onchange="preview()" type="file" multiple>
+                                    <label for="product-image">
+                                        <i class="fas fa-upload"></i>
+                                        Chọn ảnh sản phẩm &nbsp;
+                                    </label>
+                                    <p id="num-of-file">Chưa có ảnh nào được chọn</p>
+                                    <div id="images-upload">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_description">Mô tả chi tiết sản phẩm <i
+                                    class="fas fa-align-center"></i></label>
+                            <textarea required="" id="product_description" name="description"></textarea>
+                        </div>
+                        <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm">
+                            Thêm hải sản </button>
+                    </form>
+                </div>
+                <!-- End -->
+                <div id="nav-tab-paypal" class="tab-pane fade">
+                    {{#if success}}
+                    <p class="alert alert-success">{{success}}</p>
+                    {{/if}}
+                    {{#if error}}
+                    <p class="alert alert-danger">{{error}}</p>
+                    {{/if}}
+                    <form method="post" action="/menu/add" role="form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="menu_name">Tên thực đơn <i class="fas fa-signature"></i></label>
+                            <input type="text" name="menu_name" placeholder="Nhập tên thực đơn" required=""
+                                class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardNumber">Hình ảnh thực đơn <i class="far fa-images"></i></label>
+                            <div class="input-group">
+                                <div class="form-group-container">
+                                    <input id="menu-image" accept="image/*" required="" name="menu-image"
+                                        class="form-control input-md" onchange="previewMenu()" type="file">
+                                    <label for="menu-image">
+                                        <i class="fas fa-upload"></i>
+                                        Chọn ảnh thực đơn &nbsp;
+                                    </label>
+                                    <p id="menu-num-of-file">Chưa có ảnh nào được chọn</p>
+                                    <div class="images-upload" id="menu-upload">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_description">Mô tả chi tiết thực đơn <i
+                                    class="fas fa-align-center"></i></label>
+                            <textarea required="" id="menu_description" name="menu_description"></textarea>
+                        </div>
+                        <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm">
+                            Thêm thực đơn </button>
+                    </form>
+                </div>
+                <!-- End -->
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script>
+
+        let fileInput = document.getElementById("product-image")
+        let imageContainer = document.getElementById('images-upload')
+        let numOfFiles = document.getElementById('num-of-file')
+
+        function preview() {
+            imageContainer.innerHTML = ""
+            numOfFiles.textContent = `${fileInput.files.length} ảnh đã được chọn`;
+
+            for (i of fileInput.files) {
+                let reader = new FileReader()
+                let figure = document.createElement("figure")
+                let figCap = document.createElement("figcaption")
+
+                figCap.innerText = i.name
+                figure.appendChild(figCap)
+                reader.onload = () => {
+                    let img = document.createElement("img");
+                    img.setAttribute("src", reader.result);
+                    figure.insertBefore(img, figCap);
+                }
+                imageContainer.appendChild(figure);
+                reader.readAsDataURL(i)
+            }
+        }
+
+        CKEDITOR.replace('product_description')
+        CKEDITOR.replace('menu_description')
+
+
+        let fileInputMenu = document.getElementById("menu-image")
+        let imageContainerMenu = document.getElementById('menu-upload')
+        let numOfFilesMenu = document.getElementById('menu-num-of-file')
+
+        function previewMenu() {
+            imageContainerMenu.innerHTML = ""
+            numOfFilesMenu.textContent = `${fileInputMenu.files.length} ảnh đã được chọn`;
+
+            for (i of fileInputMenu.files) {
+                let reader = new FileReader()
+                let figure = document.createElement("figure")
+                let figCap = document.createElement("figcaption")
+
+                figCap.innerText = i.name
+                figure.appendChild(figCap)
+                reader.onload = () => {
+                    let img = document.createElement("img");
+                    img.setAttribute("src", reader.result);
+                    figure.insertBefore(img, figCap);
+                }
+                imageContainerMenu.appendChild(figure);
+                reader.readAsDataURL(i)
+            }
+        }
+
+
+    </script>

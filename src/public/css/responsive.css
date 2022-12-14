@@ -1,0 +1,319 @@
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .container {
+        width: 85% !important;
+    }
+
+    #navBtn1,
+    #navBtn2 {
+        display: inline-block;
+    }
+
+    #left-sidebar,
+    #right-sidebar {
+        display: flex;
+    }
+
+    .navbar-list {
+        display: none;
+    }
+
+    .navbar-item {
+        line-height: 14px;
+    }
+
+    .header-right-corner {
+        display: none;
+    }
+
+    .header-logo {
+        text-align: center;
+    }
+
+    .header-logo img {
+        width: 80%;
+    }
+
+    .navbar-btn {
+        border-style: none;
+        background-color: transparent;
+        font-size: 18px;
+    }
+
+    .header-sidebar {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--xanh);
+        width: 50%;
+        padding: 0 !important;
+        font-size: 14px;
+        color: #fff !important;
+        margin-bottom: 0 !important;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        z-index: 99;
+    }
+
+    #navBtn1,
+    #navBtn2 {
+        position: relative;
+    }
+
+    #right-sidebar {
+        top: 10%;
+        right: -250px;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 10px;
+    }
+
+    #left-sidebar {
+        top: 10%;
+        left: -250px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 10px;
+    }
+
+    #left-sidebar .sidebar-item:last-child:hover {
+        border-bottom-right-radius: 10px;
+    }
+
+    #right-sidebar .sidebar-item:last-child:hover {
+        border-bottom-left-radius: 10px;
+    }
+
+    .sidebar-item {
+        padding: 5px 5px;
+    }
+
+    .sidebar-item:hover {
+        background-color: var(--luc);
+    }
+
+    .sidebar-item a {
+        color: #fff !important;
+
+    }
+
+    #right-sidebar .item-first {
+        border-top-left-radius: 30px;
+        background-color: #fff;
+        display: flex;
+    }
+
+    #left-sidebar .item-first {
+        border-top-right-radius: 30px;
+        background-color: #fff;
+        display: flex;
+        justify-content: end;
+    }
+
+    #left-sidebar #close-btn1 i {
+        padding: 5px;
+        margin-right: 10px;
+    }
+
+    #right-sidebar #close-btn2 i {
+        padding: 5px;
+        margin-left: 10px;
+    }
+
+    /* Home page */
+    .two h1 {
+        font-size: 22px !important;
+    }
+
+    .seafood-right-banner {
+        display: none !important;
+    }
+
+    /* Product card */
+    .seafood-price,
+    .seafood-contact {
+        font-size: 12px !important;
+    }
+
+    .seafood-img-box {
+        height: 45% !important;
+    }
+
+    .seafood-content-box {
+        height: 50% !important;
+    }
+
+    .seafood-box {
+        width: 50% !important;
+        height: 34vh !important;
+        margin-bottom: 10px !important;
+    }
+
+    .seafood-title {
+        font-size: 12px !important;
+    }
+
+    .seafood-buy {
+        height: 25px !important;
+        width: 70% !important;
+    }
+
+    .seafood-buy a {
+        font-size: 10px !important;
+    }
+
+    .last-seafood {
+        display: none !important;
+    }
+
+    /* Albums */
+    #list-album1 {
+        padding-bottom: 0 !important;
+    }
+
+
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
+
+@media only screen and (max-width: 1280px) {
+    #body-cart th img {
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    .minus,
+    .plus {
+        padding: 10px !important;
+    }
+
+    .removeItem-btn {
+        padding: 10px !important;
+    }
+
+    #body-cart td {
+        padding: 5px !important;
+    }
+}
+
+
+@media (min-height: 540px) and (max-height: 668px) {
+    .seafood-box-2 {
+        height: 43vh;
+    }
+
+    .two {
+        margin-top: 20px
+    }
+
+    .cart {
+        margin-bottom: 10em !important;
+    }
+
+    footer {
+        height: 200%;
+        font-size: 12px;
+    }
+
+    .footer-img {
+        left: 190px !important;
+        bottom: -78px !important;
+    }
+
+    .footer-img img {
+        width: 80% !important;
+    }
+
+    .connect-box {
+        bottom: -18% !important;
+    }
+
+
+
+    #googleMap,
+    .mapouter,
+    .gmap_canvas {
+        height: 250px !important;
+    }
+
+    .text-center .fb-page span iframe,
+    .text-center .fb-page span {
+        height: 180px !important;
+    }
+
+    /* Product card */
+    .seafood-price,
+    .seafood-contact {
+        font-size: 12px !important;
+    }
+
+    .seafood-img-box {
+        height: 50% !important;
+    }
+
+    .seafood-box {
+        width: 33.333% !important;
+        height: 34vh !important;
+        margin-bottom: 10px !important;
+    }
+
+    .seafood-title {
+        font-size: 12px !important;
+    }
+
+    .seafood-buy {
+        height: 25px !important;
+        width: 70% !important;
+    }
+
+    .seafood-buy a {
+        font-size: 10px !important;
+    }
+
+    h1 {
+        font-size: 26px !important;
+    }
+
+    .two h1 span {
+        font-size: 10px !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Header */
+    .header-body--content {
+        height: 90px !important;
+    }
+
+    .container {
+        width: 65% !important;
+    }
+
+    /* News box */
+    .news-content-box p {
+        font-size: 12px !important;
+    }
+
+    /* Product cart */
+    #body-cart th {
+        padding: 5px !important;
+    }
+
+    #body-cart th img {
+        height: 80px !important;
+        width: 80px !important;
+    }
+
+    #body-cart td {
+        font-size: 12px !important;
+    }
+
+    /*  */
+}
