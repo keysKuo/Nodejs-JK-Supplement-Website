@@ -1,6 +1,7 @@
 const db = require('../../config/db');
 
 const Controller_Product = {
+    /* This is a function that is used to get the detail of a product. */
     getDetail: async (req, res, next) => {
         const slug = req.params.slug;
         
@@ -29,9 +30,7 @@ const Controller_Product = {
             })
             .catch(err => {
                 return res.json({success: false, msg: 'Database not found'});
-            })
-        
-        
+            })     
     }
 }
 

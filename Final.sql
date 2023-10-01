@@ -1,5 +1,5 @@
 ﻿create database final_project
-
+--drop database final_project
 use final_project
 
 
@@ -66,10 +66,6 @@ create table Import (
     constraint FK_ACCOUNT_IMPORT_ACCID foreign key (acc_id) references Account (acc_id)
 )
 
-Select P.pid, P.pname, P.price , sum(ED.quantity) as quantity  from Export E, ExportDetail ED, Product P 
-Where ED.pid = P.pid And E.exp_id = ED.exp_id And  E.createdAt >= '12-12-2022'
-	Group by  P.pid, P.pname, P.price
-	Order by sum(ED.quantity) desc
 
 create table ImportDetail (
     imp_id varchar(10),
@@ -125,6 +121,7 @@ create table OrderDetail (
 	Constraint FK_ORDERS_ORDERDETAIL foreign key (order_id) references Orders (order_id),
 	Constraint FK_PRODUCT_ORDERDETAIL foreign key (pid) references Product (pid)
 )
+
 
 -- INSERT CATEGORY --
 insert into Category values ('WP', 'Whey Protein', 'whey-protein')
@@ -371,7 +368,7 @@ insert into ImportDetail values ('I001', '8925004050', 3, 10000)
 insert into ImportDetail values ('I001', '0516031203', 2, 30000)
 insert into ImportDetail values ('I002', '0516031203', 5, 0)
 
-select * from Import
+--select * from Import
 -- END --
 
 -- INSERT EXPORT --
@@ -381,6 +378,26 @@ insert into ExportDetail values ('E002', '8925004050', 30, 1580000)
 insert into ExportDetail values ('E002', '8927028669', 50, 1900000)
 insert into ExportDetail values ('E002', '0516031203', 100, 1790000)
 insert into ExportDetail values ('E002', '2723026351', 20, 1690000)
+
+-- Export 2019 --
+insert into Export values ('E200',9000000, '2019-01-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E201',4540000, '2019-02-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E202',35000000, '2019-03-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E203',45000000, '2019-04-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E205',10000000, '2019-05-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E206',540000, '2019-06-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E207',21000000, '2019-07-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E208',45000000, '2019-08-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E209',90000000, '2019-09-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E210',1440000, '2019-10-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E211',17000000, '2019-11-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E212',30000000, '2019-12-25', N'Success', 'CS0002', 'JK-ADMIN2')
+
+-- Export 2022 --
+insert into Export values ('E100',10000000, '2022-01-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E101',9540000, '2022-02-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E102',21000000, '2022-03-25', N'Success', 'CS0002', 'JK-ADMIN2')
+insert into Export values ('E103',45000000, '2022-05-25', N'Success', 'CS0002', 'JK-ADMIN2')
 -- END --
 
 -- INSERT ORDER --
@@ -390,4 +407,12 @@ insert into OrderDetail values ('Ord002', '8925004050', 3, 1830000)
 insert into OrderDetail values ('Ord002', '0516031203', 1, 1580000)
 -- END
 
-select * From account
+--select * From account
+
+Create Function FN_REVENUE_BYMONTH (
+	@year int
+)
+Returns table as return 
+Select sum(total) as revenue , month(createdAt) as month from Export 
+Where year(createdAt) = @year
+Group by month(createdAt)

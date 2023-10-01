@@ -35,6 +35,8 @@ $(document).ready(function () {
     </div>`
         $('#newRow').append(html)
     })
+    /* A jQuery event listener. It listens for a click on an element with the id of removeRow. When it
+    is clicked, it removes the closest element with the id of inputFormRow. */
     $(document).on('click', '#removeRow', function () {
         $(this).closest('#inputFormRow').remove();
     });
